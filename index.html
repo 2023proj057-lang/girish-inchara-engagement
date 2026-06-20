@@ -9,7 +9,8 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: linear-gradient(160deg, #2a0a0a 0%, #1a0505 40%, #2d0d0d 100%);
+    /* Much darker backdrop gradient to bring out depth */
+    background: linear-gradient(160deg, #140303 0%, #0a0101 40%, #1a0505 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -19,14 +20,15 @@
   }
 
   .card {
-    background: linear-gradient(175deg, #1e0808 0%, #2c0d0d 50%, #1a0505 100%);
+    /* Rich, significantly darker card background */
+    background: linear-gradient(175deg, #0f0404 0%, #160606 50%, #0a0101 100%);
     border: 1px solid #b8860b88;
     border-radius: 4px;
     max-width: 480px;
     width: 100%;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 60px #b8860b22, inset 0 0 80px #b8860b08;
+    box-shadow: 0 0 60px #b8860b15, inset 0 0 80px #b8860b05;
   }
 
   .corner { position: absolute; width: 80px; height: 80px; opacity: 0.7; pointer-events: none; }
@@ -65,37 +67,54 @@
 
   .ring-icon { text-align: center; margin: 0.6rem 0; font-size: 22px; opacity: 0.75; letter-spacing: 8px; }
 
-  /* BIGGER & PROPERLY ALIGNED SCRATCH CARD CONTAINER */
-  .scratch-area { text-align: center; margin: 1.5rem 0; }
+  /* PROPERLY ALIGNED & LARGER SCRATCH CONTAINER */
+  .scratch-area { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1.8rem 0; 
+  }
+  
   .scratch-canvas-wrap {
     position: relative;
-    display: inline-block;
-    width: 260px;
-    height: 70px;
+    width: 280px;
+    height: 85px;
     margin: 0 auto;
-    vertical-align: top;
   }
+  
   .scratch-revealed {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #1a0808, #2a1010);
+    background: linear-gradient(135deg, #140404, #220b0b);
     border: 0.5px solid #c9a22055;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Great Vibes', cursive;
-    font-size: 32px;
+    font-size: 34px;
     color: #e8c56d;
     letter-spacing: 2px;
-    border-radius: 2px;
+    border-radius: 4px;
     white-space: nowrap;
     z-index: 1;
   }
-  .scratch-hint { font-size: 10px; color: #c9a06055; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; font-family: 'Cinzel', serif; }
-  canvas#scratchCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 2px; touch-action: none; z-index: 10; }
+  
+  .scratch-hint { font-size: 10px; color: #c9a06055; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; font-family: 'Cinzel', serif; }
+  
+  canvas#scratchCanvas { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 4px; 
+    touch-action: none; 
+    z-index: 10; 
+  }
 
   /* FIREWORKS */
   #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
@@ -149,8 +168,8 @@
 
   @media (max-width: 400px) {
     .name-main { font-size: 46px; }
-    .scratch-canvas-wrap { width: 230px; height: 65px; }
-    .scratch-revealed { font-size: 26px; }
+    .scratch-canvas-wrap { width: 245px; height: 75px; }
+    .scratch-revealed { font-size: 28px; }
     .inner-border { padding: 1.4rem 1.2rem 1.8rem; margin: 12px; }
   }
 </style>
@@ -302,4 +321,40 @@ function playScratchSound() {
     const ctx = getAudio();
     const bufferSize = ctx.sampleRate * 0.12;
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.35;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 2200;
+    filter.Q.value = 0.8;
+    src.connect(filter);
+    filter.connect(ctx.destination);
+    src.start();
+  } catch(e) {}
+}
+
+function playRevealFanfare() {
+  try {
+    const ctx = getAudio();
+    const notes = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5];
+    const times = [0, 0.12, 0.24, 0.38, 0.52, 0.62, 0.74];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = i < 4 ? 'sine' : 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + times[i]);
+      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + times[i] + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + times[i] + 0.32);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + times[i]);
+      osc.stop(ctx.currentTime + times[i] + 0.35);
+    });
+    // Bell shimmer
+    setTimeout(() => {
+      [1318.5, 1567.98, 2093].
