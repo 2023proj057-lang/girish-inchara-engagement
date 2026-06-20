@@ -9,8 +9,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    /* Restored to light cement color gradient to make any background image highly visible */
-    background: linear-gradient(160deg, #eaeaea 0%, #e0e0e0 50%, #d5d5d5 100%);
+    background: linear-gradient(160deg, #2a0a0a 0%, #1a0505 40%, #2d0d0d 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -20,7 +19,6 @@
   }
 
   .card {
-    /* Rich dark inner card palette with slight opacity adjustments to contrast against the light cement background */
     background: linear-gradient(175deg, #1e0808 0%, #2c0d0d 50%, #1a0505 100%);
     border: 1px solid #b8860b88;
     border-radius: 4px;
@@ -28,7 +26,7 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), inset 0 0 80px #b8860b08;
+    box-shadow: 0 0 60px #b8860b22, inset 0 0 80px #b8860b08;
   }
 
   .corner { position: absolute; width: 80px; height: 80px; opacity: 0.7; pointer-events: none; }
@@ -67,22 +65,16 @@
 
   .ring-icon { text-align: center; margin: 0.6rem 0; font-size: 22px; opacity: 0.75; letter-spacing: 8px; }
 
-  /* LARGE & PROPERLY ALIGNED SCRATCH CONTAINER */
-  .scratch-area { 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 1.8rem 0; 
-  }
-  
+  /* BIGGER & PROPERLY ALIGNED SCRATCH CARD CONTAINER */
+  .scratch-area { text-align: center; margin: 1.5rem 0; }
   .scratch-canvas-wrap {
     position: relative;
-    width: 300px; 
-    height: 90px; 
+    display: inline-block;
+    width: 260px;
+    height: 70px;
     margin: 0 auto;
+    vertical-align: top;
   }
-  
   .scratch-revealed {
     position: absolute;
     top: 0;
@@ -95,26 +87,15 @@
     align-items: center;
     justify-content: center;
     font-family: 'Great Vibes', cursive;
-    font-size: 36px;
+    font-size: 32px;
     color: #e8c56d;
     letter-spacing: 2px;
-    border-radius: 4px;
+    border-radius: 2px;
     white-space: nowrap;
     z-index: 1;
   }
-  
-  .scratch-hint { font-size: 10px; color: #c9a06055; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; font-family: 'Cinzel', serif; }
-  
-  canvas#scratchCanvas { 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    border-radius: 4px; 
-    touch-action: none; 
-    z-index: 10; 
-  }
+  .scratch-hint { font-size: 10px; color: #c9a06055; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; font-family: 'Cinzel', serif; }
+  canvas#scratchCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 2px; touch-action: none; z-index: 10; }
 
   /* FIREWORKS */
   #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
@@ -168,8 +149,8 @@
 
   @media (max-width: 400px) {
     .name-main { font-size: 46px; }
-    .scratch-canvas-wrap { width: 250px; height: 80px; }
-    .scratch-revealed { font-size: 30px; }
+    .scratch-canvas-wrap { width: 230px; height: 65px; }
+    .scratch-revealed { font-size: 26px; }
     .inner-border { padding: 1.4rem 1.2rem 1.8rem; margin: 12px; }
   }
 </style>
@@ -395,3 +376,151 @@ function launchFirework() {
     const speed = 1.5 + Math.random() * 3.5;
     particles.push({
       x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1,
+      decay: 0.012 + Math.random() * 0.012,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: 2 + Math.random() * 2
+    });
+  }
+}
+
+function animateFW() {
+  if(!fwActive) return;
+  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.055;
+    p.vx *= 0.98;
+    p.life -= p.decay;
+    fwCtx.globalAlpha = Math.max(0, p.life);
+    fwCtx.fillStyle = p.color;
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    fwCtx.fill();
+  });
+  fwCtx.globalAlpha = 1;
+  requestAnimationFrame(animateFW);
+}
+
+function startFireworks() {
+  fwCanvas.style.display = 'block';
+  fwActive = true;
+  animateFW();
+  let count = 0;
+  const burst = () => {
+    launchFirework();
+    count++;
+    if(count < 8) setTimeout(burst, 350);
+    else {
+      setTimeout(() => {
+        fwActive = false;
+        fwCanvas.style.display = 'none';
+        particles = [];
+      }, 3000);
+    }
+  };
+  burst();
+}
+
+// ── SCRATCH CARD ENGINE ──
+const canvas = document.getElementById('scratchCanvas');
+const ctx2 = canvas.getContext('2d');
+const wrap = document.getElementById('scratchWrap');
+const revealed = document.getElementById('dateReveal');
+const hint = document.getElementById('scratchHint');
+
+let scratchReady = false;
+let revealed_done = false;
+let lastScratchTime = 0;
+
+function initScratch() {
+  const w = wrap.offsetWidth || 260;
+  const h = wrap.offsetHeight || 70;
+  
+  canvas.width = w;
+  canvas.height = h;
+
+  const grad = ctx2.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, '#b8860b');
+  grad.addColorStop(0.5, '#d4a843');
+  grad.addColorStop(1, '#c9a220');
+  ctx2.fillStyle = grad;
+  ctx2.fillRect(0, 0, w, h);
+
+  ctx2.font = 'bold 12px Cinzel, serif';
+  ctx2.fillStyle = '#1a0808';
+  ctx2.textAlign = 'center';
+  ctx2.textBaseline = 'middle';
+  ctx2.fillText('✦  Scratch to Reveal  ✦', w / 2, h / 2);
+
+  ctx2.globalCompositeOperation = 'destination-out';
+  scratchReady = true;
+}
+
+let scratchPx = 0;
+
+function doScratch(clientX, clientY) {
+  if(!scratchReady || revealed_done) return;
+
+  const r = canvas.getBoundingClientRect();
+  const x = clientX - r.left;
+  const y = clientY - r.top;
+
+  ctx2.beginPath();
+  ctx2.arc(x, y, 22, 0, Math.PI * 2);
+  ctx2.fill();
+  
+  scratchPx++;
+  const now = Date.now();
+  if(now - lastScratchTime > 80) { playScratchSound(); lastScratchTime = now; }
+  
+  if(scratchPx > 35 && !revealed_done) {
+    revealed_done = true;
+    canvas.style.display = 'none';
+    hint.style.display = 'none';
+    revealed.classList.add('revealed-glow');
+    setTimeout(() => { playRevealFanfare(); startFireworks(); }, 100);
+  }
+}
+
+let isScratching = false;
+canvas.addEventListener('mousedown', e => { isScratching = true; doScratch(e.clientX, e.clientY); });
+window.addEventListener('mouseup', () => isScratching = false);
+canvas.addEventListener('mousemove', e => { if(isScratching) doScratch(e.clientX, e.clientY); });
+
+canvas.addEventListener('touchstart', e => { 
+  isScratching = true; 
+  if(e.touches[0]) doScratch(e.touches[0].clientX, e.touches[0].clientY); 
+}, {passive: true});
+canvas.addEventListener('touchend', () => isScratching = false);
+canvas.addEventListener('touchmove', e => { 
+  if(isScratching && e.touches[0]) doScratch(e.touches[0].clientX, e.touches[0].clientY); 
+}, {passive: true});
+
+// ── COUNTDOWN ──
+const engagement = new Date('2026-09-21T11:00:00');
+function tick() {
+  const now = new Date();
+  let diff = Math.max(0, engagement - now);
+  const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+  const hh = Math.floor(diff / 3600000); diff -= hh * 3600000;
+  const mm = Math.floor(diff / 60000); diff -= mm * 60000;
+  const ss = Math.floor(diff / 1000);
+  document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(hh).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(mm).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(ss).padStart(2,'0');
+}
+
+window.addEventListener('load', () => {
+  tick();
+  setInterval(tick, 1000);
+  initScratch();
+});
+</script>
+</body>
+</html>
