@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Girish & Inchara – Engagement Invitation</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Cinzel:wght@500;700&display=swap" rel="stylesheet"/>
 <style>
@@ -16,6 +16,8 @@
     justify-content: center;
     padding: 1.5rem 1rem;
     font-family: 'Cormorant Garamond', serif;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .card {
@@ -73,6 +75,7 @@
 
   .ring-icon { text-align: center; margin: 0.6rem 0; font-size: 22px; letter-spacing: 8px; filter: drop-shadow(0px 1px 1px white); }
 
+  /* FAIL-SAFE SCRATCH BOX AREA */
   .scratch-area { text-align: center; margin: 1.2rem 0; position: relative; }
   .scratch-canvas-wrap { position: relative; display: inline-block; width: 240px; height: 65px; margin: 0 auto; vertical-align: top; }
   .scratch-revealed {
@@ -151,7 +154,7 @@
 </head>
 <body>
 
-<audio id="bgMusic" src="music.mp3" loop></audio>
+<audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
 
 <canvas id="fireworks-canvas"></canvas>
 
@@ -263,7 +266,7 @@
 </div>
 
 <script>
-// ── TIMER RUNNING IMPLEMENTATION ──
+// ── LIVE COUNTDOWN CLOCK ──
 const engagement = new Date('2026-09-21T11:00:00');
 function tick() {
   const now = new Date();
@@ -279,7 +282,7 @@ function tick() {
   document.getElementById('cd-s').textContent = String(ss).padStart(2,'0');
 }
 
-// ── FIXED SCRATCH ENGINE ──
+// ── ROBUST SCRATCH ENGINE ──
 const canvas = document.getElementById('scratchCanvas');
 const ctx2 = canvas.getContext('2d');
 const wrap = document.getElementById('scratchWrap');
@@ -289,8 +292,7 @@ const myMusic = document.getElementById('bgMusic');
 
 let scratchReady = false;
 let revealed_done = false;
-let musicStarted = false;
-let scratchPx = 0;
+let pointsScratched = 0;
 
 function initScratch() {
   const w = wrap.offsetWidth || 240;
@@ -316,34 +318,38 @@ function initScratch() {
   scratchReady = true;
 }
 
-function tryPlayMusic() {
-  if (!musicStarted) {
-    myMusic.play().catch(e => console.log("Audio play blocked initially", e));
-    musicStarted = true;
+function handleMusicPlay() {
+  if (myMusic && myMusic.paused) {
+    myMusic.play().catch(err => console.log("Audio waiting for full interaction:", err));
   }
+}
+
+function clearOverlay() {
+  if (revealed_done) return;
+  revealed_done = true;
+  canvas.style.display = 'none';
+  hint.style.display = 'none';
+  revealed.classList.add('revealed-glow');
+  startFireworks();
 }
 
 function doScratch(clientX, clientY) {
   if(!scratchReady || revealed_done) return;
   
-  // Start the background music on the very first touch action
-  tryPlayMusic();
+  handleMusicPlay();
 
   const r = canvas.getBoundingClientRect();
   const x = clientX - r.left;
   const y = clientY - r.top;
 
   ctx2.beginPath();
-  ctx2.arc(x, y, 18, 0, Math.PI * 2);
+  ctx2.arc(x, y, 20, 0, Math.PI * 2);
   ctx2.fill();
   
-  scratchPx += 1;
-  if(scratchPx > 35 && !revealed_done) {
-    revealed_done = true;
-    canvas.style.display = 'none';
-    hint.style.display = 'none';
-    revealed.classList.add('revealed-glow');
-    startFireworks();
+  pointsScratched++;
+  // Force full transparent reveal after basic scratching behavior
+  if(pointsScratched > 20) {
+    clearOverlay();
   }
 }
 
@@ -354,11 +360,11 @@ canvas.addEventListener('mousemove', e => { if(isScratching) doScratch(e.clientX
 
 canvas.addEventListener('touchstart', e => { 
   isScratching = true; 
-  doScratch(e.touches[0].clientX, e.touches[0].clientY); 
+  if(e.touches[0]) doScratch(e.touches[0].clientX, e.touches[0].clientY); 
 }, {passive: true});
 canvas.addEventListener('touchend', () => isScratching = false);
 canvas.addEventListener('touchmove', e => { 
-  if(isScratching) doScratch(e.touches[0].clientX, e.touches[0].clientY); 
+  if(isScratching && e.touches[0]) doScratch(e.touches[0].clientX, e.touches[0].clientY); 
 }, {passive: true});
 
 // ── FALLING PETALS ──
@@ -442,11 +448,15 @@ function startFireworks() {
   burst();
 }
 
-// Initialize everything on rendering
-window.addEventListener('DOMContentLoaded', () => {
+// Master execution launcher
+window.addEventListener('load', () => {
   tick();
   setInterval(tick, 1000);
   initScratch();
+  
+  // Backup activation for restrictive mobile systems
+  window.addEventListener('touchstart', handleMusicPlay, { once: true });
+  window.addEventListener('click', handleMusicPlay, { once: true });
 });
 </script>
 </body>
