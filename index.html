@@ -9,8 +9,8 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    /* Much darker backdrop gradient to bring out depth */
-    background: linear-gradient(160deg, #140303 0%, #0a0101 40%, #1a0505 100%);
+    /* Restored to light cement color gradient to make any background image highly visible */
+    background: linear-gradient(160deg, #eaeaea 0%, #e0e0e0 50%, #d5d5d5 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -20,15 +20,15 @@
   }
 
   .card {
-    /* Rich, significantly darker card background */
-    background: linear-gradient(175deg, #0f0404 0%, #160606 50%, #0a0101 100%);
+    /* Rich dark inner card palette with slight opacity adjustments to contrast against the light cement background */
+    background: linear-gradient(175deg, #1e0808 0%, #2c0d0d 50%, #1a0505 100%);
     border: 1px solid #b8860b88;
     border-radius: 4px;
     max-width: 480px;
     width: 100%;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 60px #b8860b15, inset 0 0 80px #b8860b05;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), inset 0 0 80px #b8860b08;
   }
 
   .corner { position: absolute; width: 80px; height: 80px; opacity: 0.7; pointer-events: none; }
@@ -67,7 +67,7 @@
 
   .ring-icon { text-align: center; margin: 0.6rem 0; font-size: 22px; opacity: 0.75; letter-spacing: 8px; }
 
-  /* PROPERLY ALIGNED & LARGER SCRATCH CONTAINER */
+  /* LARGE & PROPERLY ALIGNED SCRATCH CONTAINER */
   .scratch-area { 
     display: flex;
     flex-direction: column;
@@ -78,8 +78,8 @@
   
   .scratch-canvas-wrap {
     position: relative;
-    width: 280px;
-    height: 85px;
+    width: 300px; 
+    height: 90px; 
     margin: 0 auto;
   }
   
@@ -89,13 +89,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #140404, #220b0b);
+    background: linear-gradient(135deg, #1a0808, #2a1010);
     border: 0.5px solid #c9a22055;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Great Vibes', cursive;
-    font-size: 34px;
+    font-size: 36px;
     color: #e8c56d;
     letter-spacing: 2px;
     border-radius: 4px;
@@ -168,8 +168,8 @@
 
   @media (max-width: 400px) {
     .name-main { font-size: 46px; }
-    .scratch-canvas-wrap { width: 245px; height: 75px; }
-    .scratch-revealed { font-size: 28px; }
+    .scratch-canvas-wrap { width: 250px; height: 80px; }
+    .scratch-revealed { font-size: 30px; }
     .inner-border { padding: 1.4rem 1.2rem 1.8rem; margin: 12px; }
   }
 </style>
@@ -357,4 +357,41 @@ function playRevealFanfare() {
     });
     // Bell shimmer
     setTimeout(() => {
-      [1318.5, 1567.98, 2093].
+      [1318.5, 1567.98, 2093].forEach((f, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.15, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(ctx.currentTime + i * 0.06);
+        o.stop(ctx.currentTime + 0.9);
+      });
+    }, 800);
+  } catch(e) {}
+}
+
+// ── FIREWORKS ──
+const fwCanvas = document.getElementById('fireworks-canvas');
+const fwCtx = fwCanvas.getContext('2d');
+let particles = [];
+let fwActive = false;
+
+function resizeFW() {
+  fwCanvas.width = window.innerWidth;
+  fwCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeFW);
+resizeFW();
+
+function launchFirework() {
+  const colors = ['#e8c56d','#c9702a','#ffd700','#ff9999','#ffb3de','#c9a220','#fff8dc'];
+  const x = Math.random() * fwCanvas.width;
+  const y = Math.random() * fwCanvas.height * 0.6;
+  for(let i = 0; i < 55; i++){
+    const angle = (Math.PI * 2 / 55) * i;
+    const speed = 1.5 + Math.random() * 3.5;
+    particles.push({
+      x, y,
