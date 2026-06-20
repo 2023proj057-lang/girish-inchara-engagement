@@ -4,17 +4,13 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>Girish & Inchara – Engagement Invitation</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Cinzel:wght@400;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Cinzel:wght@500;700&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    /* Sets your image as the background, covers the screen, and keeps it centered */
-    background: linear-gradient(160deg, rgba(42, 10, 10, 0.88) 0%, rgba(26, 5, 5, 0.92) 100%), url('beside.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    /* Lighter cement background for the outer area */
+    background: linear-gradient(135deg, #eaeaea 0%, #dcdcdc 50%, #cfcfcf 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -24,20 +20,22 @@
   }
 
   .card {
-    /* Semi-transparent background card to let the portrait subtly peek through the sides */
-    background: linear-gradient(175deg, rgba(30, 8, 8, 0.92) 0%, rgba(44, 13, 13, 0.95) 50%, rgba(26, 5, 5, 0.95) 100%);
-    border: 1px solid #b8860b88;
-    border-radius: 4px;
+    /* Restricted the photo specifically to this invitation rectangle */
+    background: linear-gradient(180deg, rgba(245, 245, 245, 0.82) 0%, rgba(224, 224, 224, 0.88) 100%), url('beside.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid #b8860b77;
+    border-radius: 6px;
     max-width: 480px;
     width: 100%;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 60px #b8860b22, inset 0 0 80px #b8860b08;
-    backdrop-filter: blur(3px); /* Adds a premium blurred glass effect */
-    -webkit-backdrop-filter: blur(3px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12), inset 0 0 60px rgba(255,255,255,0.4);
   }
 
-  .corner { position: absolute; width: 80px; height: 80px; opacity: 0.7; pointer-events: none; }
+  /* Darkened corners to contrast against the cement look */
+  .corner { position: absolute; width: 80px; height: 80px; opacity: 0.85; pointer-events: none; }
   .corner-tl { top: 8px; left: 8px; }
   .corner-tr { top: 8px; right: 8px; transform: scaleX(-1); }
   .corner-bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
@@ -45,105 +43,111 @@
 
   .inner-border {
     margin: 18px;
-    border: 0.5px solid #c9a22055;
+    border: 1px solid #aa801044;
     padding: 1.8rem 1.8rem 2.2rem;
     position: relative;
+    background: rgba(255, 255, 255, 0.35); /* Subtle inner glass layer to let portrait show but preserve text legibility */
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    border-radius: 4px;
   }
 
   .bismillah {
     text-align: center;
     font-style: italic;
-    color: #d4a843;
+    color: #8a6405;
     font-size: 13px;
+    font-weight: 600;
     letter-spacing: 2px;
     margin-bottom: 1.2rem;
-    opacity: 0.85;
   }
 
   .divider { display: flex; align-items: center; gap: 10px; margin: 0.8rem 0; }
-  .divider-line { flex: 1; height: 0.5px; background: linear-gradient(90deg, transparent, #c9a22066, transparent); }
-  .divider-diamond { width: 6px; height: 6px; background: #c9a220; transform: rotate(45deg); opacity: 0.8; }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #aa801066, transparent); }
+  .divider-diamond { width: 6px; height: 6px; background: #966f0a; transform: rotate(45deg); }
 
-  .invite-text { text-align: center; color: #c9a06088; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem; }
+  .invite-text { text-align: center; color: #5a5a5a; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1rem; font-weight: 600; }
 
   .names-block { text-align: center; margin: 1.2rem 0; }
-  .name-main { font-family: 'Great Vibes', cursive; font-size: 56px; color: #e8c56d; line-height: 1.1; text-shadow: 0 0 30px #c9a22044; display: block; }
-  .ampersand { font-family: 'Great Vibes', cursive; font-size: 40px; color: #c9702a; display: block; margin: -4px 0; line-height: 1; }
-  .surname { font-family: 'Cinzel', serif; font-size: 10px; color: #c9a06077; letter-spacing: 5px; text-transform: uppercase; margin-top: 6px; display: block; }
+  .name-main { font-family: 'Great Vibes', cursive; font-size: 58px; color: #222222; line-height: 1.1; text-shadow: 1px 1px 1px rgba(255,255,255,0.8); display: block; }
+  .ampersand { font-family: 'Great Vibes', cursive; font-size: 42px; color: #aa5010; display: block; margin: -4px 0; line-height: 1; }
+  .surname { font-family: 'Cinzel', serif; font-size: 11px; color: #444444; letter-spacing: 4px; text-transform: uppercase; margin-top: 6px; display: block; font-weight: 700; }
 
-  .ring-icon { text-align: center; margin: 0.6rem 0; font-size: 22px; opacity: 0.75; letter-spacing: 8px; }
+  .ring-icon { text-align: center; margin: 0.6rem 0; font-size: 22px; letter-spacing: 8px; filter: drop-shadow(0px 1px 1px white); }
 
   /* SCRATCH CARD */
   .scratch-area { text-align: center; margin: 1rem 0; }
   .scratch-canvas-wrap { position: relative; display: inline-block; }
   .scratch-revealed {
-    background: linear-gradient(135deg, #1a0808, #2a1010);
-    border: 0.5px solid #c9a22055;
+    background: linear-gradient(135deg, #fbfbfb, #eaeaea);
+    border: 1px solid #aa801066;
     padding: 14px 24px;
     font-family: 'Great Vibes', cursive;
-    font-size: 30px;
-    color: #e8c56d;
+    font-size: 32px;
+    color: #8a6405;
+    font-weight: bold;
     letter-spacing: 2px;
-    border-radius: 2px;
+    border-radius: 4px;
     white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   }
-  .scratch-hint { font-size: 10px; color: #c9a06055; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; font-family: 'Cinzel', serif; }
-  canvas#scratchCanvas { position: absolute; top: 0; left: 0; border-radius: 2px; touch-action: none; }
+  .scratch-hint { font-size: 10px; color: #555555; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; font-family: 'Cinzel', serif; font-weight: 700; }
+  canvas#scratchCanvas { position: absolute; top: 0; left: 0; border-radius: 4px; touch-action: none; cursor: pointer; }
 
   /* FIREWORKS */
   #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
 
   /* COUNTDOWN */
   .countdown-row { display: flex; gap: 8px; justify-content: center; margin: 0.8rem 0; }
-  .cd-block { text-align: center; flex: 1; max-width: 68px; background: #c9a22010; border: 0.5px solid #c9a22033; padding: 8px 4px; }
-  .cd-num { font-family: 'Cinzel', serif; font-size: 20px; color: #e8c56d; display: block; line-height: 1; }
-  .cd-label { font-size: 9px; color: #c9a06066; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; display: block; }
+  .cd-block { text-align: center; flex: 1; max-width: 68px; background: rgba(255, 255, 255, 0.6); border: 1px solid #aa801044; padding: 8px 4px; border-radius: 4px; }
+  .cd-num { font-family: 'Cinzel', serif; font-size: 20px; color: #222222; display: block; line-height: 1; font-weight: 700; }
+  .cd-label { font-size: 9px; color: #555555; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; display: block; font-weight: 600; }
 
   /* DETAILS */
   .details-block { margin: 1.2rem 0; }
-  .detail-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 0.9rem; padding: 10px 12px; border: 0.5px solid #c9a22022; border-radius: 2px; background: #c9a22008; }
-  .detail-icon { color: #c9a220; font-size: 16px; margin-top: 2px; flex-shrink: 0; }
-  .detail-label { font-size: 10px; color: #c9a06066; letter-spacing: 2px; text-transform: uppercase; display: block; }
-  .detail-value { font-size: 14px; color: #e8d5a3; display: block; margin-top: 2px; font-style: italic; }
-  .detail-sub { font-size: 12px; color: #c9a06088; display: block; margin-top: 2px; }
+  .detail-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 0.9rem; padding: 10px 12px; border: 1px solid #aa801033; border-radius: 4px; background: rgba(255, 255, 255, 0.65); }
+  .detail-icon { color: #aa8010; font-size: 16px; margin-top: 2px; flex-shrink: 0; }
+  .detail-label { font-size: 10px; color: #555555; letter-spacing: 2px; text-transform: uppercase; display: block; font-weight: 700; }
+  .detail-value { font-size: 14px; color: #111111; display: block; margin-top: 2px; font-style: italic; font-weight: 600; }
+  .detail-sub { font-size: 12px; color: #444444; display: block; margin-top: 2px; }
 
   /* FAMILY */
   .family-section { margin: 1.2rem 0; }
-  .family-heading { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #c9a06066; text-align: center; margin-bottom: 0.8rem; }
-  .family-names { text-align: center; font-size: 14px; color: #d4b87a; line-height: 2; font-style: italic; }
-  .family-sub { font-size: 11px; color: #c9a06066; letter-spacing: 2px; font-style: normal; font-family: 'Cinzel', serif; }
-  .family-divider { text-align: center; color: #c9a22044; font-size: 12px; margin: 4px 0; letter-spacing: 4px; }
+  .family-heading { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #444444; text-align: center; margin-bottom: 0.8rem; font-weight: 700; }
+  .family-names { text-align: center; font-size: 15px; color: #222222; line-height: 1.8; font-style: italic; font-weight: 600; }
+  .family-sub { font-size: 11px; color: #666666; letter-spacing: 2px; font-style: normal; font-family: 'Cinzel', serif; font-weight: 700; }
+  .family-divider { text-align: center; color: #aa801066; font-size: 12px; margin: 4px 0; letter-spacing: 4px; }
 
-  /* RSVP */
-  .rsvp-block { text-align: center; margin-top: 1.4rem; padding: 12px; border: 0.5px solid #c9a22033; background: #c9a22008; }
-  .rsvp-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; color: #c9a06066; text-transform: uppercase; margin-bottom: 8px; }
-  .rsvp-btn { display: inline-block; padding: 8px 22px; border: 0.5px solid #c9a220; color: #c9a220; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; background: transparent; transition: all 0.3s; margin: 4px; text-decoration: none; }
-  .rsvp-btn:hover, .rsvp-btn:active { background: #c9a22022; }
+  /* RSVP BUTTONS - Clean Grey/Gold Styling */
+  .rsvp-block { text-align: center; margin-top: 1.4rem; padding: 12px; border: 1px solid #aa801044; background: rgba(255, 255, 255, 0.6); border-radius: 4px; }
+  .rsvp-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; color: #444444; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  .rsvp-btn { display: inline-block; padding: 8px 22px; border: 1px solid #966f0a; color: #966f0a; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; background: rgba(255,255,255,0.7); transition: all 0.3s; margin: 4px; text-decoration: none; font-weight: 700; border-radius: 2px; }
+  .rsvp-btn:hover, .rsvp-btn:active { background: #966f0a; color: #ffffff; }
 
-  .footer-text { text-align: center; margin-top: 1.2rem; font-size: 11px; color: #c9a06044; font-style: italic; letter-spacing: 1px; }
+  .footer-text { text-align: center; margin-top: 1.2rem; font-size: 11px; color: #555555; font-style: italic; letter-spacing: 1px; font-weight: 600; }
 
   /* PETALS */
   .rose-petals { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; }
-  .petal { position: absolute; opacity: 0.12; animation: fall linear infinite; }
+  .petal { position: absolute; opacity: 0.25; animation: fall linear infinite; }
   @keyframes fall {
     0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.12; }
-    90% { opacity: 0.12; }
+    10% { opacity: 0.25; }
+    90% { opacity: 0.25; }
     100% { transform: translateY(1100px) rotate(360deg); opacity: 0; }
   }
 
   /* REVEAL ANIMATION */
   @keyframes revealPulse {
-    0% { text-shadow: 0 0 10px #e8c56d88; }
-    50% { text-shadow: 0 0 40px #e8c56dcc, 0 0 80px #c9a22066; }
-    100% { text-shadow: 0 0 20px #e8c56d88; }
+    0% { text-shadow: 0 0 8px rgba(138,100,5,0.2); }
+    50% { text-shadow: 0 0 25px rgba(150,111,10,0.6); }
+    100% { text-shadow: 0 0 8px rgba(138,100,5,0.2); }
   }
   .revealed-glow { animation: revealPulse 1.5s ease-in-out 3; }
 
   @media (max-width: 400px) {
-    .name-main { font-size: 46px; }
-    .scratch-revealed { font-size: 24px; padding: 12px 16px; }
-    .inner-border { padding: 1.4rem 1.2rem 1.8rem; margin: 12px; }
+    .name-main { font-size: 48px; }
+    .scratch-revealed { font-size: 26px; padding: 12px 16px; }
+    .inner-border { padding: 1.4rem 1.1rem 1.8rem; margin: 12px; }
   }
 </style>
 </head>
@@ -155,40 +159,32 @@
   <div class="rose-petals" id="petals"></div>
 
   <svg class="corner corner-tl" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#c9a220" stroke-width="0.5" fill="none" opacity="0.6"/>
-    <path d="M4 4 L4 20" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <path d="M4 4 L20 4" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <circle cx="4" cy="4" r="2" fill="#c9a220" opacity="0.7"/>
-    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#c9a220" stroke-width="0.4" fill="none" opacity="0.5"/>
-    <circle cx="12" cy="4" r="1" fill="#c9a220" opacity="0.5"/>
-    <circle cx="4" cy="12" r="1" fill="#c9a220" opacity="0.5"/>
+    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#966f0a" stroke-width="0.75" fill="none" opacity="0.7"/>
+    <path d="M4 4 L4 20" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <path d="M4 4 L20 4" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <circle cx="4" cy="4" r="2" fill="#966f0a" opacity="0.8"/>
+    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#966f0a" stroke-width="0.5" fill="none" opacity="0.6"/>
   </svg>
   <svg class="corner corner-tr" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#c9a220" stroke-width="0.5" fill="none" opacity="0.6"/>
-    <path d="M4 4 L4 20" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <path d="M4 4 L20 4" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <circle cx="4" cy="4" r="2" fill="#c9a220" opacity="0.7"/>
-    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#c9a220" stroke-width="0.4" fill="none" opacity="0.5"/>
-    <circle cx="12" cy="4" r="1" fill="#c9a220" opacity="0.5"/>
-    <circle cx="4" cy="12" r="1" fill="#c9a220" opacity="0.5"/>
+    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#966f0a" stroke-width="0.75" fill="none" opacity="0.7"/>
+    <path d="M4 4 L4 20" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <path d="M4 4 L20 4" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <circle cx="4" cy="4" r="2" fill="#966f0a" opacity="0.8"/>
+    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#966f0a" stroke-width="0.5" fill="none" opacity="0.6"/>
   </svg>
   <svg class="corner corner-bl" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#c9a220" stroke-width="0.5" fill="none" opacity="0.6"/>
-    <path d="M4 4 L4 20" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <path d="M4 4 L20 4" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <circle cx="4" cy="4" r="2" fill="#c9a220" opacity="0.7"/>
-    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#c9a220" stroke-width="0.4" fill="none" opacity="0.5"/>
-    <circle cx="12" cy="4" r="1" fill="#c9a220" opacity="0.5"/>
-    <circle cx="4" cy="12" r="1" fill="#c9a220" opacity="0.5"/>
+    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#966f0a" stroke-width="0.75" fill="none" opacity="0.7"/>
+    <path d="M4 4 L4 20" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <path d="M4 4 L20 4" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <circle cx="4" cy="4" r="2" fill="#966f0a" opacity="0.8"/>
+    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#966f0a" stroke-width="0.5" fill="none" opacity="0.6"/>
   </svg>
   <svg class="corner corner-br" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#c9a220" stroke-width="0.5" fill="none" opacity="0.6"/>
-    <path d="M4 4 L4 20" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <path d="M4 4 L20 4" stroke="#c9a220" stroke-width="0.5" opacity="0.8"/>
-    <circle cx="4" cy="4" r="2" fill="#c9a220" opacity="0.7"/>
-    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#c9a220" stroke-width="0.4" fill="none" opacity="0.5"/>
-    <circle cx="12" cy="4" r="1" fill="#c9a220" opacity="0.5"/>
-    <circle cx="4" cy="12" r="1" fill="#c9a220" opacity="0.5"/>
+    <path d="M4 4 L4 40 Q4 4 40 4 Z" stroke="#966f0a" stroke-width="0.75" fill="none" opacity="0.7"/>
+    <path d="M4 4 L4 20" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <path d="M4 4 L20 4" stroke="#966f0a" stroke-width="0.75" opacity="0.9"/>
+    <circle cx="4" cy="4" r="2" fill="#966f0a" opacity="0.8"/>
+    <path d="M8 8 Q8 20 20 20 Q8 20 8 8" stroke="#966f0a" stroke-width="0.5" fill="none" opacity="0.6"/>
   </svg>
 
   <div class="inner-border">
@@ -284,7 +280,6 @@ const petalsEl = document.getElementById('petals');
 
 // ── AUDIO via Web Audio API ──
 let audioCtx = null;
-
 function getAudio() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return audioCtx;
@@ -329,20 +324,6 @@ function playRevealFanfare() {
       osc.start(ctx.currentTime + times[i]);
       osc.stop(ctx.currentTime + times[i] + 0.35);
     });
-    setTimeout(() => {
-      [1318.5, 1567.98, 2093].forEach((f, i) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.value = f;
-        g.gain.setValueAtTime(0.15, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(ctx.currentTime + i * 0.06);
-        o.stop(ctx.currentTime + 0.9);
-      });
-    }, 800);
   } catch(e) {}
 }
 
@@ -360,146 +341,8 @@ window.addEventListener('resize', resizeFW);
 resizeFW();
 
 function launchFirework() {
-  const colors = ['#e8c56d','#c9702a','#ffd700','#ff9999','#ffb3de','#c9a220','#fff8dc'];
+  const colors = ['#aa8010','#d4af37','#aa5010','#ff6b6b','#ffb3de','#555555','#966f0a'];
   const x = Math.random() * fwCanvas.width;
   const y = Math.random() * fwCanvas.height * 0.6;
   for(let i = 0; i < 55; i++){
-    const angle = (Math.PI * 2 / 55) * i;
-    const speed = 1.5 + Math.random() * 3.5;
-    particles.push({
-      x, y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      life: 1,
-      decay: 0.012 + Math.random() * 0.012,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      size: 2 + Math.random() * 2
-    });
-  }
-}
-
-function animateFW() {
-  if(!fwActive) return;
-  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
-  particles = particles.filter(p => p.life > 0);
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.055;
-    p.vx *= 0.98;
-    p.life -= p.decay;
-    fwCtx.globalAlpha = Math.max(0, p.life);
-    fwCtx.fillStyle = p.color;
-    fwCtx.beginPath();
-    fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    fwCtx.fill();
-  });
-  fwCtx.globalAlpha = 1;
-  requestAnimationFrame(animateFW);
-}
-
-function startFireworks() {
-  fwCanvas.style.display = 'block';
-  fwActive = true;
-  animateFW();
-  let count = 0;
-  const burst = () => {
-    launchFirework();
-    count++;
-    if(count < 8) setTimeout(burst, 350);
-    else {
-      setTimeout(() => {
-        fwActive = false;
-        fwCanvas.style.display = 'none';
-        particles = [];
-      }, 3000);
-    }
-  };
-  burst();
-}
-
-// ── SCRATCH CARD ──
-const canvas = document.getElementById('scratchCanvas');
-const ctx2 = canvas.getContext('2d');
-const revealed = document.getElementById('dateReveal');
-const hint = document.getElementById('scratchHint');
-
-let scratchReady = false;
-let revealed_done = false;
-let lastScratchTime = 0;
-
-function initScratch() {
-  const rect = revealed.getBoundingClientRect();
-  const w = revealed.offsetWidth;
-  const h = revealed.offsetHeight;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  canvas.width = w * (window.devicePixelRatio || 1);
-  canvas.height = h * (window.devicePixelRatio || 1);
-  ctx2.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-
-  const grad = ctx2.createLinearGradient(0, 0, w, h);
-  grad.addColorStop(0, '#b8860b');
-  grad.addColorStop(0.5, '#d4a843');
-  grad.addColorStop(1, '#c9a220');
-  ctx2.fillStyle = grad;
-  ctx2.fillRect(0, 0, w, h);
-
-  ctx2.font = 'bold 11px Cinzel, serif';
-  ctx2.fillStyle = '#1a0808';
-  ctx2.textAlign = 'center';
-  ctx2.textBaseline = 'middle';
-  ctx2.fillText('✦  Scratch to Reveal  ✦', w / 2, h / 2);
-
-  ctx2.globalCompositeOperation = 'destination-out';
-  scratchReady = true;
-}
-
-let scratchPx = 0;
-
-function doScratch(x, y) {
-  if(!scratchReady || revealed_done) return;
-  ctx2.beginPath();
-  ctx2.arc(x, y, 22, 0, Math.PI * 2);
-  ctx2.fill();
-  scratchPx += Math.PI * 22 * 22;
-  const total = canvas.width * canvas.height / ((window.devicePixelRatio||1) ** 2);
-  const now = Date.now();
-  if(now - lastScratchTime > 80) { playScratchSound(); lastScratchTime = now; }
-  if(scratchPx / total > 0.48 && !revealed_done) {
-    revealed_done = true;
-    canvas.style.display = 'none';
-    hint.style.display = 'none';
-    revealed.classList.add('revealed-glow');
-    setTimeout(() => { playRevealFanfare(); startFireworks(); }, 100);
-  }
-}
-
-let isScratching = false;
-canvas.addEventListener('mousedown', e => { isScratching = true; const r = canvas.getBoundingClientRect(); doScratch(e.clientX - r.left, e.clientY - r.top); });
-window.addEventListener('mouseup', () => isScratching = false);
-canvas.addEventListener('mousemove', e => { if(!isScratching) return; const r = canvas.getBoundingClientRect(); doScratch(e.clientX - r.left, e.clientY - r.top); });
-canvas.addEventListener('touchstart', e => { e.preventDefault(); const r = canvas.getBoundingClientRect(); doScratch(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); }, {passive:false});
-canvas.addEventListener('touchmove', e => { e.preventDefault(); const r = canvas.getBoundingClientRect(); doScratch(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); }, {passive:false});
-
-setTimeout(initScratch, 400);
-
-// ── COUNTDOWN ──
-const engagement = new Date('2026-09-21T11:00:00');
-function tick() {
-  const now = new Date();
-  let diff = Math.max(0, engagement - now);
-  const d = Math.floor(diff / 86400000); diff -= d * 86400000;
-  const hh = Math.floor(diff / 3600000); diff -= hh * 3600000;
-  const mm = Math.floor(diff / 60000); diff -= mm * 60000;
-  const ss = Math.floor(diff / 1000);
-  document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
-  document.getElementById('cd-h').textContent = String(hh).padStart(2,'0');
-  document.getElementById('cd-m').textContent = String(mm).padStart(2,'0');
-  document.getElementById('cd-s').textContent = String(ss).padStart(2,'0');
-}
-tick();
-setInterval(tick, 1000);
-</script>
-</body>
-</html>
+    const angle = (Math.PI * 2 / 5
