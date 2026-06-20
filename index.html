@@ -9,7 +9,12 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: linear-gradient(160deg, #2a0a0a 0%, #1a0505 40%, #2d0d0d 100%);
+    /* Sets your image as the background, covers the screen, and keeps it centered */
+    background: linear-gradient(160deg, rgba(42, 10, 10, 0.88) 0%, rgba(26, 5, 5, 0.92) 100%), url('beside.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -19,7 +24,8 @@
   }
 
   .card {
-    background: linear-gradient(175deg, #1e0808 0%, #2c0d0d 50%, #1a0505 100%);
+    /* Semi-transparent background card to let the portrait subtly peek through the sides */
+    background: linear-gradient(175deg, rgba(30, 8, 8, 0.92) 0%, rgba(44, 13, 13, 0.95) 50%, rgba(26, 5, 5, 0.95) 100%);
     border: 1px solid #b8860b88;
     border-radius: 4px;
     max-width: 480px;
@@ -27,6 +33,8 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 0 60px #b8860b22, inset 0 0 80px #b8860b08;
+    backdrop-filter: blur(3px); /* Adds a premium blurred glass effect */
+    -webkit-backdrop-filter: blur(3px);
   }
 
   .corner { position: absolute; width: 80px; height: 80px; opacity: 0.7; pointer-events: none; }
@@ -250,7 +258,7 @@
 
     <div class="rsvp-block">
       <div class="rsvp-label">Kindly confirm your attendance</div>
-      <a class="rsvp-btn" href="tel:+919999999999">✦ RSVP ✦</a>
+      <a class="rsvp-btn" href="tel:+918867069672">✦ RSVP ✦</a>
       <a class="rsvp-btn" href="https://www.justdial.com/Tumkur/Sri-Shivakumara-Swamiji-Dharmika-Kendra-Gokula-Extension/9999PX816-X816-230116171053-Q1L5_BZDET" target="_blank">📍 Directions</a>
     </div>
 
@@ -273,6 +281,70 @@ const petalsEl = document.getElementById('petals');
     petalsEl.appendChild(p);
   }
 });
+
+// ── AUDIO via Web Audio API ──
+let audioCtx = null;
+
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playScratchSound() {
+  try {
+    const ctx = getAudio();
+    const bufferSize = ctx.sampleRate * 0.12;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.35;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 2200;
+    filter.Q.value = 0.8;
+    src.connect(filter);
+    filter.connect(ctx.destination);
+    src.start();
+  } catch(e) {}
+}
+
+function playRevealFanfare() {
+  try {
+    const ctx = getAudio();
+    const notes = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5];
+    const times = [0, 0.12, 0.24, 0.38, 0.52, 0.62, 0.74];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = i < 4 ? 'sine' : 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + times[i]);
+      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + times[i] + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + times[i] + 0.32);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + times[i]);
+      osc.stop(ctx.currentTime + times[i] + 0.35);
+    });
+    setTimeout(() => {
+      [1318.5, 1567.98, 2093].forEach((f, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.15, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(ctx.currentTime + i * 0.06);
+        o.stop(ctx.currentTime + 0.9);
+      });
+    }, 800);
+  } catch(e) {}
+}
 
 // ── FIREWORKS ──
 const fwCanvas = document.getElementById('fireworks-canvas');
@@ -354,6 +426,7 @@ const hint = document.getElementById('scratchHint');
 
 let scratchReady = false;
 let revealed_done = false;
+let lastScratchTime = 0;
 
 function initScratch() {
   const rect = revealed.getBoundingClientRect();
@@ -391,12 +464,14 @@ function doScratch(x, y) {
   ctx2.fill();
   scratchPx += Math.PI * 22 * 22;
   const total = canvas.width * canvas.height / ((window.devicePixelRatio||1) ** 2);
+  const now = Date.now();
+  if(now - lastScratchTime > 80) { playScratchSound(); lastScratchTime = now; }
   if(scratchPx / total > 0.48 && !revealed_done) {
     revealed_done = true;
     canvas.style.display = 'none';
     hint.style.display = 'none';
     revealed.classList.add('revealed-glow');
-    setTimeout(() => { startFireworks(); }, 100);
+    setTimeout(() => { playRevealFanfare(); startFireworks(); }, 100);
   }
 }
 
